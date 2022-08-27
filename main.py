@@ -5,6 +5,18 @@ from datetime import datetime, date
 from zhdate import ZhDate
 import sys
 import os
+import http.client, urllib
+# -*- coding: utf-8 -*-
+
+def get_kongqi():
+ #获取空气质量
+    conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
+    params = urllib.parse.urlencode({'key':'34e7dc55114fc1265411ab86b84cd1b4','area':'中卫'})
+    headers = {'Content-type':'application/x-www-form-urlencoded'}
+    conn.request('POST','/aqi/index',params,headers)
+    res = conn.getresponse()
+    data = res.read()
+    return(data.decode('utf-8'))
  
  
 def get_color():
@@ -60,6 +72,16 @@ def get_weather(region):
     wind_dir = response["now"]["windDir"]
     return weather, temp, wind_dir
  
+ 
+def get_kongqi(region):
+ #获取空气质量
+    conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
+    params = urllib.parse.urlencode({'key':'34e7dc55114fc1265411ab86b84cd1b4','area':'region'})
+    headers = {'Content-type':'application/x-www-form-urlencoded'}
+    conn.request('POST','/aqi/index',params,headers)
+    res = conn.getresponse()
+    data = res.read()
+    return(data.decode('utf-8'))
  
 def get_birthday(birthday, year, today):
     birthday_year = birthday.split("-")[0]

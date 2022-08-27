@@ -10,7 +10,7 @@ import http.client, urllib
 # -*- coding: utf-8 -*-
 
 
-def get_zaoan(ch)
+def get_zaoan()
     #早安心语
     conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
     params = urllib.parse.urlencode({'key':'34e7dc55114fc1265411ab86b84cd1b4'})
@@ -19,10 +19,11 @@ def get_zaoan(ch)
     res = conn.getresponse()
     data = res.read()
     data = json.loads(data)
-    return(data["newslist"][0]["content"])
+    ch = data["newslist"][0]["content"]
+    return ch
 
 
-def get_kongqi(pm2_5,quality_):
+def get_kongqi():
     #获取空气质量
 
     conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
@@ -32,7 +33,10 @@ def get_kongqi(pm2_5,quality_):
     res = conn.getresponse()
     data = res.read()
     data = json.loads(data)
-    return(data["newslist"][0]["pm2_5"],data["newslist"][0]["quality"])
+    pm2_5 = data["newslist"][0]["pm2_5"]
+    quality_ = data["newslist"][0]["quality"]
+    return pm2_5,quality_
+
  
 def get_color():
     # 获取随机颜色
@@ -265,5 +269,5 @@ if __name__ == "__main__":
         note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, region, weather, temp, wind_dir,pm2_5,quality_,note_ch, note_en)
+        send_message(user, accessToken, region, weather, temp, wind_dir, pm2_5, quality_, note_ch, note_en)
     os.system("pause")

@@ -9,17 +9,30 @@ import json
 import http.client, urllib
 # -*- coding: utf-8 -*-
 
-def get_kongqi(pm2_5,quality):
- #获取空气质量
 
-conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
-params = urllib.parse.urlencode({'key':'34e7dc55114fc1265411ab86b84cd1b4','area':'上海'})
-headers = {'Content-type':'application/x-www-form-urlencoded'}
-conn.request('POST','/aqi/index',params,headers)
-res = conn.getresponse()
-data = res.read()
-data = json.loads(data)
-return(data["newslist"][0]["pm2_5"],data["newslist"][0]["quality"])
+def get_zaoan(ch)
+    #早安心语
+    conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
+    params = urllib.parse.urlencode({'key':'34e7dc55114fc1265411ab86b84cd1b4'})
+    headers = {'Content-type':'application/x-www-form-urlencoded'}
+    conn.request('POST','/zaoan/index',params,headers)
+    res = conn.getresponse()
+    data = res.read()
+    data = json.loads(data)
+    return(data["newslist"][0]["content"])
+
+
+def get_kongqi(pm2_5,quality_):
+    #获取空气质量
+
+    conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
+    params = urllib.parse.urlencode({'key':'34e7dc55114fc1265411ab86b84cd1b4','area':'上海'})
+    headers = {'Content-type':'application/x-www-form-urlencoded'}
+    conn.request('POST','/aqi/index',params,headers)
+    res = conn.getresponse()
+    data = res.read()
+    data = json.loads(data)
+    return(data["newslist"][0]["pm2_5"],data["newslist"][0]["quality"])
  
 def get_color():
     # 获取随机颜色
@@ -180,12 +193,20 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
                 "value": love_days,
                 "color": get_color()
             },
+            "kongqi": {
+                "value": pm2_5,
+                "color": get_color()
+            },
+           "quality": {
+                "value": quality_,
+                "color": get_color()
+            },
             "note_en": {
                 "value": note_en,
                 "color": get_color()
             },
             "note_ch": {
-                "value": note_ch,
+                "value": ch,
                 "color": get_color()
             }
         }
@@ -237,12 +258,12 @@ if __name__ == "__main__":
     # 传入地区获取天气信息
     region = config["region"]
     weather, temp, wind_dir = get_weather(region)
-    note_ch = config["note_ch"]
+    note_ch = ch
     note_en = config["note_en"]
     if note_ch == "" and note_en == "":
         # 获取词霸每日金句
         note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, region, weather, temp, wind_dir, note_ch, note_en)
+        send_message(user, accessToken, region, weather, temp, wind_dir,pm2_5,quality_,note_ch, note_en)
     os.system("pause")
